@@ -8,6 +8,23 @@ namespace BottleApplication
 {
     public class Bottle
     {
+
+        public Bottle(double r = 0, double h = 0)
+        {
+            if (r < 0 || h < 0)
+            {
+                throw new InvalidOperationException("The dimensions provided for the bottle are invalid");
+            }
+            this.Height = Math.Round(h, 2);
+            this.Radius = Math.Round(r, 2);
+            Console.WriteLine(Information());
+        }
+
+        public string Information()
+        {
+            return "The bottle height is " + Height + ", and the radius is " + Radius + ". The contents is currently " + Contents + "ml(Total capacity: " + Volume + "ml).";
+        }
+
         private double _radius;
         public double Radius
         {
@@ -65,6 +82,9 @@ namespace BottleApplication
             }
         }
         
+        /// <summary>
+        /// Fills the bottles remaining volume.
+        /// </summary>
         public void FillBottle()
         {
             double ml = 0.01;
@@ -73,35 +93,45 @@ namespace BottleApplication
 
             while (Volume > Contents)
             {
-                Console.WriteLine("Adding " + ml + "ml to bottle.");
+                Console.WriteLine("Fill percentage: " + ((Contents / Volume) * 100));
 
-                SetContent(ml);
+                SetContents(ml);
             }
 
             Console.WriteLine("Bottle filled with " + Contents + "ml.");
         }
 
-        private void SetContent(double ml)
+        /// <summary>
+        /// Adjusts the Contents by the given amount
+        /// </summary>
+        /// <param name="ml"></param>
+        private void SetContents(double ml)
         {
             Console.WriteLine("Bottle contains " + Contents + "ml.");
 
             if (Contents + ml > Volume)
             {
-                throw new InvalidOperationException("Cannot add " + ml + "ml as the bottle's maximum volume is " + Volume + "ml.");
+                throw new InvalidOperationException(string.Format("Cannot add {0}ml as the bottle's maximum volume is {1}ml. Contents: {2}ml", ml, Volume, Contents));
             }
             else if (Contents + ml < 0)
             {
-                throw new InvalidOperationException("Cannot remove " + Math.Abs(ml) + "ml as the bottle contains " + Volume + "ml.");
+                throw new InvalidOperationException(string.Format("Cannot remove {0}ml as the bottle contains {1}ml.", (ml < 0) ? ml * -1 : ml, Contents));
             }
 
             Contents = Contents + ml;
+
+            Console.WriteLine("After adjustment bottle contains " + Contents + "ml.");
         }
 
-        public void AddToContents(double ml)
+        /// <summary>
+        /// Adds amount to contents.
+        /// </summary>
+        /// <param name="ml"></param>
+        public void Add(double ml)
         {
             try
             {
-                SetContent(ml);
+                SetContents(ml);
             }
             catch (InvalidOperationException ex)
             {
@@ -110,40 +140,26 @@ namespace BottleApplication
             Console.WriteLine(string.Format("\r\nContents in bottle:{0}", Contents + "ml."));
         }
 
-        public void RemoveFromContents(double ml)
+        /// <summary>
+        /// Removes amount from Contents.
+        /// </summary>
+        /// <param name="ml"></param>
+        public void Remove(double ml)
         {
-            ml = ml * -1;
-
-            if (Contents < ml)
+            if (ml > 0)
             {
-                throw new InvalidOperationException("Cannot remove " + ml + "ml from the bottle as it contains a total of " + Math.Round(Contents, 2) + "ml.");
+                ml = ml * -1;
             }
-            
+                        
             try
             {
-                SetContent(ml);
+                SetContents(ml);
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine(string.Format("\r\nError removing to bottle contents.\r\n{0}", ex.Message));
             }
             Console.WriteLine(string.Format("\r\nContents in bottle:{0}", Contents + "ml."));
-        }
-
-        public Bottle(double r = 0, double h = 0)
-        {
-            if (r < 0 || h < 0)
-            {
-                throw new InvalidOperationException("The dimensions provided for the bottle are invalid");
-            }
-            this.Height = Math.Round(h,2);
-            this.Radius = Math.Round(r,2);
-            Console.WriteLine(Information());
-        }
-
-        public string Information()
-        {
-            return "The bottle height is " + Height + ", and the radius is " + Radius + ". The contents is currently " + Contents + "ml(Total capacity: " + Volume + "ml).";
         }
     }
 }
