@@ -1,0 +1,6 @@
+C:\source\Experimental\BottleApplication\BottleApplication\bin\Debug\BottleApplication.exe.config
+C:\source\Experimental\BottleApplication\BottleApplication\bin\Debug\BottleApplication.exe
+C:\source\Experimental\BottleApplication\BottleApplication\bin\Debug\BottleApplication.pdb
+C:\source\Experimental\BottleApplication\BottleApplication\obj\Debug\BottleApplication.csprojResolveAssemblyReference.cache
+C:\source\Experimental\BottleApplication\BottleApplication\obj\Debug\BottleApplication.exe
+C:\source\Experimental\BottleApplication\BottleApplication\obj\Debug\BottleApplication.pdb
