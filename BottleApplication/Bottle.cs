@@ -65,6 +65,8 @@ namespace BottleApplication
             }
         }
 
+        private string Unit { get; set; }
+
         public void FillBottle()
         {
             double ml = 0.01;
@@ -111,13 +113,13 @@ namespace BottleApplication
 
         public void RemoveFromContents(double ml)
         {
-            if (Volume < ml)
-            {
-                throw new InvalidOperationException("Cannot remove " + ml + "ml from the bottle as it contains a total of " + Math.Round(Volume,2) + "ml.");
-            }
-
             ml = ml * -1;
 
+            if (Contents < ml)
+            {
+                throw new InvalidOperationException("Cannot remove " + ml + "ml from the bottle as it contains a total of " + Math.Round(Contents, 2) + "ml.");
+            }
+            
             try
             {
                 SetContent(ml);
@@ -128,7 +130,7 @@ namespace BottleApplication
             }
         }
 
-        public Bottle(double r = 0, double h = 0)
+        public Bottle(double r = 0, double h = 0, string unit = "")
         {
             if (r < 0 || h < 0)
             {
@@ -136,13 +138,13 @@ namespace BottleApplication
             }
             this.Height = Math.Round(h,2);
             this.Radius = Math.Round(r,2);
-
-            Console.WriteLine(GetBottleInformation());
+            Unit = unit;
+            Console.WriteLine(Information());
         }
 
-        public string GetBottleInformation()
+        public string Information()
         {
-            return "The bottle height is " + Height + ", and the radius is " + Radius + ", with a total capacity of " + Volume + "ml";
+            return "The bottle height is " + Height + Unit + ", and the radius is " + Radius + Unit + ". The contents is currently " + Contents + "ml(Total capacity: " + Volume + "ml).";
         }
     }
 }
