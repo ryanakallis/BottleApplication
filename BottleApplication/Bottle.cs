@@ -8,41 +8,55 @@ namespace BottleApplication
 {
     public class Bottle
     {
-
-        public Bottle(double r = 0, double h = 0)
+        /// <summary>
+        /// Creates a new bottle with the given diameter and height dimensions.
+        /// </summary>
+        /// <param name="diameter"></param>
+        /// <param name="height"></param>
+        public Bottle(double diameter, double height)
         {
-            if (r < 0 || h < 0)
+            if (diameter <= 0.0D || height <= 0.0D)
             {
-                throw new InvalidOperationException("The dimensions provided for the bottle are invalid");
+                throw new InvalidOperationException("The dimensions provided for the bottle are invalid.");
             }
-            this.Height = Math.Round(h, 2);
-            this.Radius = Math.Round(r, 2);
-            Console.WriteLine(Information());
+            Height = Math.Round(height, 2);
+            Diameter = Math.Round(diameter, 2);
+            Console.WriteLine(ToString());
         }
 
-        public string Information()
+        /// <summary>
+        /// Returns a string representation of the bottle.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
         {
-            return "The bottle height is " + Height + ", and the radius is " + Radius + ". The contents is currently " + Contents + "ml(Total capacity: " + Volume + "ml).";
+            return "The bottle height is " + Height + ", and the radius is " + Diameter + ". The contents is currently " + Contents + "ml(Total capacity: " + Volume + "ml).";
         }
 
-        private double _radius;
-        public double Radius
+        private double _diameter;
+        /// <summary>
+        /// Get's or sets the diameter of the bottle.
+        /// </summary>
+        public double Diameter
         {
             get
             {
-                return _radius;
+                return _diameter;
             }
             private set
             {
-                if (Math.Round(_radius, 2) != Math.Round(value, 2))
+                if (Math.Round(_diameter, 2) != Math.Round(value, 2))
                 {
-                    _radius = value;
+                    _diameter = Math.Round(value, 2);
 
                 }
             }
         }
 
         private double _height;
+        /// <summary>
+        /// Get's or sets the height of the bottle.
+        /// </summary>
         public double Height
         {
             get
@@ -59,6 +73,9 @@ namespace BottleApplication
         }
 
         private double _contents;
+        /// <summary>
+        /// Get's or sets the contents of the bottle.
+        /// </summary>
         public double Contents
         {
             get
@@ -74,92 +91,58 @@ namespace BottleApplication
             }
         }
 
+        /// <summary>
+        /// Get's the maximum content value of the bottle can contain.
+        /// </summary>
         public double Volume
         {
             get
             {
-                return Math.Round((Math.PI * (Radius * Radius) * Height),2);
+                return Math.Round((Math.PI * ((Diameter / 2)*(Diameter / 2)) * Height),2);
             }
-        }
-        
-        /// <summary>
-        /// Fills the bottles remaining volume.
-        /// </summary>
-        public void FillBottle()
-        {
-            double ml = 0.01;
-
-            Console.WriteLine("Begin Pouring\r\n");
-
-            while (Volume > Contents)
-            {
-                Console.WriteLine("Fill percentage: " + ((Contents / Volume) * 100));
-
-                SetContents(ml);
-            }
-
-            Console.WriteLine("Bottle filled with " + Contents + "ml.");
         }
 
         /// <summary>
-        /// Adjusts the Contents by the given amount
+        /// Adjusts the bottles contents by the given amount.
         /// </summary>
-        /// <param name="ml"></param>
+        /// <exception cref="InvalidOperationException">Throws InvalidOperationException if trying to add more than the bottles total volume.</exception>
+        /// <exception cref="InvalidOperationException">Throws InvalidOperationException if trying to remove more than the bottles current contents.</exception>
         private void SetContents(double ml)
         {
-            Console.WriteLine("Bottle contains " + Contents + "ml.");
-
             if (Contents + ml > Volume)
             {
-                throw new InvalidOperationException(string.Format("Cannot add {0}ml as the bottle's maximum volume is {1}ml. Contents: {2}ml", ml, Volume, Contents));
+                throw new InvalidOperationException(string.Format("Cannot add {0}ml as the bottles contents is currently {2}ml, and the bottles maximum volume is {1}ml.", ml, Volume, Contents));
             }
             else if (Contents + ml < 0)
             {
-                throw new InvalidOperationException(string.Format("Cannot remove {0}ml as the bottle contains {1}ml.", (ml < 0) ? ml * -1 : ml, Contents));
+                throw new InvalidOperationException(string.Format("Cannot remove {0}ml as the bottle contains a total of {1}ml.", (ml < 0) ? ml * -1 : ml, Contents));
             }
 
             Contents = Contents + ml;
-
-            Console.WriteLine("After adjustment bottle contains " + Contents + "ml.");
         }
-
+        
         /// <summary>
-        /// Adds amount to contents.
+        /// Adds amount to bottle contents.
         /// </summary>
         /// <param name="ml"></param>
-        public void Add(double ml)
+        public void Fill(double ml)
         {
-            try
-            {
-                SetContents(ml);
-            }
-            catch (InvalidOperationException ex)
-            {
-                Console.WriteLine(string.Format("\r\nError adding to bottle contents.\r\n{0}",ex.Message));
-            }
-            Console.WriteLine(string.Format("\r\nContents in bottle:{0}", Contents + "ml."));
+            SetContents(ml);
         }
-
+        
         /// <summary>
-        /// Removes amount from Contents.
+        /// Removes amount from bottle contents.
         /// </summary>
         /// <param name="ml"></param>
-        public void Remove(double ml)
+        public void Pour(double ml)
         {
             if (ml > 0)
             {
                 ml = ml * -1;
             }
-                        
-            try
-            {
-                SetContents(ml);
-            }
-            catch (InvalidOperationException ex)
-            {
-                Console.WriteLine(string.Format("\r\nError removing to bottle contents.\r\n{0}", ex.Message));
-            }
-            Console.WriteLine(string.Format("\r\nContents in bottle:{0}", Contents + "ml."));
+
+            SetContents(ml);
         }
+
     }
 }
